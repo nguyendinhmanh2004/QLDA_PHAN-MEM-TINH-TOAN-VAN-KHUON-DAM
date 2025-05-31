@@ -1,0 +1,218 @@
+﻿<Window x:Class="TINHTOANVANKHUONDAM.View.ViewTrangChu"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TINHTOANVANKHUONDAM.View" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        x:Name="ViewTC"
+        Title="ViewTrangChu" Height="750" Width="1000" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/Styles/Color.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Flipper.xaml" />
+                <ResourceDictionary Source="../Resources/MainResource.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--#region ToolBar-->
+        <ToolBar Grid.Row="1" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal">
+                <Button Background="White" x:Name="btnNew">
+                    <materialDesign:PackIcon Kind="InvoicePlus" />
+                </Button>
+                <Button Background="White" x:Name="btnOpen">
+                    <materialDesign:PackIcon Kind="FolderOpen" />
+                </Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button Background="White" x:Name="btnSave">
+                    <materialDesign:PackIcon Kind="ContentSave" />
+                </Button>
+                <Button Background="White" x:Name="btnSaveAs">
+                    <materialDesign:PackIcon Kind="ContentSaveAll" />
+                </Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button Background="White" x:Name="btnRun">
+                    <materialDesign:PackIcon Kind="ArrowRightDropCircle" />
+                </Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button Background="White" x:Name="btnXuatExcel">
+                    <materialDesign:PackIcon Kind="MicrosoftExcel" />
+                </Button>
+            </StackPanel>
+        </ToolBar>
+        <!--#endregion-->
+
+        <Menu Background="{StaticResource ChuDao3}" Height="35" >
+            <MenuItem Header="File" Foreground="White" VerticalAlignment="Center">
+                <MenuItem Margin="10 0 0 0" Header="Tạo mới file" Foreground="Black" Width="300"/>
+                <MenuItem Margin="10 0 0 0" BorderThickness="0 0 0 1" Header="Mở file" Foreground="Black" BorderBrush="Gray"/>
+                <MenuItem Margin="10 0 0 0" Header="Lưu file" Foreground="Black"/>
+                <MenuItem Margin="10 0 0 0" Header="Thoát" Foreground="Black"/>
+            </MenuItem>
+            <MenuItem Header="Công cụ" Foreground="White" VerticalAlignment="Center">
+                <!-- Các MenuItem con trong Công cụ -->
+                <MenuItem Height="20" Margin="10 0 0 0" Header="Xuất kết quả" Foreground="Black"/>
+            </MenuItem>
+            <MenuItem Header="Cài đặt" Foreground="White" VerticalAlignment="Center">
+                <!-- Các MenuItem con trong Tính toán -->
+            </MenuItem>
+
+            <MenuItem Header="Trợ giúp" Foreground="White" VerticalAlignment="Center">
+                <!-- Các MenuItem con trong Trợ giúp -->
+            </MenuItem>
+        </Menu>
+
+        <TabControl Grid.Row="1" Margin="0 30 0 0">
+
+            <!--#region Khai báo dầm-->
+            <TabItem Width="200" HorizontalAlignment="Left" Header="Nhập liệu">
+                <Grid Margin="10">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="600"/>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Margin="20" Background="{StaticResource ChuDao3}" Width="150" Height="50" Command="{Binding NhapTuRevit}" CommandParameter="{Binding ElementName=ViewTC}"
+                    Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="White">Nhập từ revit</Button>
+                    <DataGrid Grid.Row="1" VerticalScrollBarVisibility="Auto" CanUserAddRows="False" x:Name="dtgBeam" IsReadOnly="True" ItemsSource="{Binding Beams}" AutoGenerateColumns="False" Margin="10">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="50"/>
+                            <DataGridTextColumn Header="Tên Dầm" Binding="{Binding Name}" Width="*"/>
+                            <DataGridTextColumn Header="Chiều Dài (mm)" Binding="{Binding Length}" Width="*"/>
+                            <DataGridTextColumn Header="Rộng (mm)" Binding="{Binding Width}" Width="*"/>
+                            <DataGridTextColumn Header="Cao (mm)" Binding="{Binding Height}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Text="Xem trước" Margin="0 30 0 0"/>
+                    <Border  Grid.Row="1" Grid.Column="1" Height="300" VerticalAlignment="Center" BorderBrush="Black" 
+                        BorderThickness="1" Background="White" HorizontalAlignment="Center" ClipToBounds="True">
+                        <Canvas x:Name="canvas" Width="300" Height="300" RenderTransformOrigin="0.5,0.5">
+                            <Canvas.RenderTransform>
+                                <TransformGroup>
+                                    <!-- Phóng to nội dung gấp 2 lần -->
+                                    <ScaleTransform ScaleX="3" ScaleY="3" />
+                                    <TranslateTransform Y="0" />
+                                </TransformGroup>
+                            </Canvas.RenderTransform>
+                        </Canvas>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <!--#endregion-->
+
+
+            <!--#region Khai báo vật liệu ván khuôn-->
+            <TabItem Width="220" HorizontalAlignment="Left" Header="Khai báo vật liệu ván khuôn">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="350"/>
+
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Margin="20,20,20,20">
+                        <GroupBox Background="WhiteSmoke" Header="Kích Thước Cấu Kiện" BorderThickness="1" Margin="10">
+                            <StackPanel>
+                                <TextBlock Text="Ván thành dày (m):"/>
+                                <TextBox Margin="0 0 0 10" HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="txtDayVanThanh" Width="200"/>
+
+                                <TextBlock Text="Ván đáy dầm dày (m):"/>
+                                <TextBox Margin="0 0 0 10" HorizontalAlignment="Left" x:Name="txtDayVanDay" Width="200"/>
+
+                                <TextBlock Text="Tiết diện cột chống (cm):"/>
+                                <TextBox Margin="0 0 0 10" HorizontalAlignment="Left" x:Name="txtCotChong" Width="200"/>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Background="WhiteSmoke" Header="Thông Số Cơ Học" Margin="10">
+                            <StackPanel>
+                                <TextBlock Text="Trọng lượng riêng bê tông :"/>
+                                <TextBox Margin="0 0 0 10" HorizontalAlignment="Left" x:Name="txtGamaBT" Width="200"/>
+
+                                <TextBlock Text="Hệ số vượt tải:"/>
+                                <TextBox Margin="0 0 0 10" HorizontalAlignment="Left" x:Name="txtHSVT" Width="200"/>
+
+                                <TextBlock Text="Trọng lương bản thân ván khuôn :"/>
+                                <TextBox Margin="0 0 0 10" HorizontalAlignment="Left" x:Name="txtGamaVK" Width="200"/>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                    <GroupBox VerticalAlignment="Top" Height="430" Grid.Column="1" Background="WhiteSmoke" Header="Đặc Tính Vật Liệu" Margin="10,30,20,0" Grid.ColumnSpan="5">
+                        <StackPanel>
+                            <TextBlock Text="Cường độ gỗ :"/>
+                            <TextBox Margin="0 0 0 10" HorizontalAlignment="Left" x:Name="txtCDG" Width="200"/>
+
+                            <TextBlock Text="Tên ván khuôn :"/>
+                            <TextBox HorizontalAlignment="Left" x:Name="txtName" Width="200"/>
+                        </StackPanel>
+                    </GroupBox>
+                    <Button Grid.Column="3" Margin="0,100,0,0" Foreground="White" FontSize="15" Content="Lưu" Width="100" Background="{StaticResource ChuDao}" x:Name="btnLuu" 
+                            Command="{Binding cmLuu}" CommandParameter="{Binding ElementName=ViewTC}" Grid.ColumnSpan="3"/>
+                </Grid>
+            </TabItem>
+            <!--#endregion-->
+
+            <!--#region Tính toán ván khuôn-->
+            <TabItem Width="200" HorizontalAlignment="Left" Header="Tính toán ván khuôn">
+                <Grid>
+                    <StackPanel>
+                        <GroupBox Background="WhiteSmoke" Header="Vật Liệu" Margin="0,10,0,10">
+                            <StackPanel>
+                                <TextBlock Text="Chọn ván khuôn:"/>
+                                <ComboBox HorizontalAlignment="Left" Margin="0 0 0 20" x:Name="cboMaterial" Width="200"/>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <GroupBox Background="WhiteSmoke" Header="Loại dầm" Margin="0,10,0,10">
+                            <StackPanel>
+                                <TextBlock Text="Chọn loại dầm:"/>
+                                <ComboBox HorizontalAlignment="Left" Margin="0 0 0 20" x:Name="cbbDam" Width="200"/>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <GroupBox Background="WhiteSmoke"   Header="Kết Quả Tính Toán" Margin="0,10,0,10">
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel>
+                                    <TextBlock Text="Khoảng cách cột chống :" Margin="0 0 0 10"/>
+
+                                    <TextBlock Text="Số cột chống :" Margin="0 0 0 10"/>
+
+                                    <TextBlock Text="Khoảng cách nẹp đứng :" Margin="0 0 0 10"/>
+                                    
+                                    <TextBlock Text="Số nẹp đứng :" Margin="0 0 0 10"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock x:Name="lblKCCC" Width="200" Margin="0 0 0 10"/>
+
+                                    <TextBlock x:Name="lblSoKCCC" Width="200" Margin="0 0 0 10"/>
+
+                                    <TextBlock x:Name="lblKCND" Width="200" Margin="0 0 0 10"/>
+
+                                    <TextBlock x:Name="lblSoNepDung" Width="200" Margin="0 0 0 10"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+
+                    <Button Background="{StaticResource ChuDao}" Foreground="White" Width="200" Height="50" VerticalAlignment="Bottom" Command="{Binding cmTinhToan}" CommandParameter="{Binding ElementName=ViewTC}" Margin="50">Tính Toán</Button>
+                </Grid>
+            </TabItem>
+            <!--#endregion-->
+        </TabControl>
+    </Grid>
+</Window>
